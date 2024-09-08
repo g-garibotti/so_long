@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 16:07:18 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/08 21:26:54 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/08 22:06:50 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,6 @@ void	render_game(t_game *game)
 	if (game->victory)
 	{
 		mlx_string_put(game->mlx, game->win, game->window_width / 2 - 50,
-			game->window_height / 2, 0x000000, "YOU WIN!");
+			game->window_height / 2, 0xFFFFFF, "YOU WIN!");
 	}
 }
