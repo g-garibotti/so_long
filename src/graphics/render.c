@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 16:07:18 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/08 16:40:53 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/08 19:58:31 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static void	display_movement_count(t_game *game)
 		free(count_str);
 		return ;
 	}
-	mlx_string_put(game->mlx, game->win, 10, 20, 0xFFFFFF, display_str);
+	mlx_string_put(game->mlx, game->win, 10, 20, 0x000000, display_str);
 	free(count_str);
 	free(display_str);
 }
@@ -71,6 +71,6 @@ void	render_game(t_game *game)
 	if (game->victory)
 	{
 		mlx_string_put(game->mlx, game->win, game->window_width / 2 - 50,
-			game->window_height / 2, 0xFFFFFF, "YOU WIN!");
+			game->window_height / 2, 0x000000, "YOU WIN!");
 	}
 }

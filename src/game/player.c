@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 16:06:34 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/08 18:57:32 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/08 19:59:43 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,4 @@ void move_player(t_game *game, int dx, int dy)
     game->map.player.y = new_y;
     game->map.map[new_y][new_x] = PLAYER;
     game->movements++;
-
-    ft_printf("Moves: %d\n", game->movements);
 }
