@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/08 16:05:49 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/08 19:48:36 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/08 21:40:45 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ static void	update_collectible_frame(t_game *game)
 	frame_counter++;
 	if (frame_counter >= ANIMATION_SPEED)
 	{
-		game->current_collectible_frame =
-			(game->current_collectible_frame + 1) % 3;
+		game->current_collectible_frame = (game->current_collectible_frame + 1)
+			% 3;
 		frame_counter = 0;
 	}
 }

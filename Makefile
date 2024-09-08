@@ -6,7 +6,7 @@
 #    By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 11:16:01 by ggaribot          #+#    #+#              #
-#    Updated: 2024/09/08 18:23:39 by ggaribot         ###   ########.fr        #
+#    Updated: 2024/09/08 21:49:37 by ggaribot         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,7 @@ SRCS = $(CORE_DIR)/main.c \
        $(CORE_DIR)/game_loop.c \
        $(CORE_DIR)/game_exit.c \
        $(MAP_DIR)/map_parser.c \
+	   $(MAP_DIR)/map_reader.c \
        $(MAP_DIR)/map_validator.c \
        $(MAP_DIR)/map_solver.c \
        $(GAME_DIR)/player.c \
