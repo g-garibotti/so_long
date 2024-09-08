@@ -3,101 +3,106 @@
 /*                                                        :::      ::::::::   */
 /*   map_validator.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcohen <jcohen@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/15 17:33:30 by jcohen            #+#    #+#             */
-/*   Updated: 2024/07/27 01:14:25 by jcohen           ###   ########.fr       */
+/*   Created: 2024/09/08 15:58:26 by ggaribot          #+#    #+#             */
+/*   Updated: 2024/09/08 18:31:36 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/so_long.h"
 
-static int	ft_check_map_elements(t_game *game)
+static bool	check_horizontal_walls(t_map *map)
 {
 	int	i;
-	int	j;
 
-	i = -1;
-	while (++i < game->map.rows)
+	i = 0;
+	while (i < map->columns)
 	{
-		j = -1;
-		while (++j < game->map.columns)
+		if (map->map[0][i] != WALL || map->map[map->rows - 1][i] != WALL)
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
+static bool	check_vertical_walls(t_map *map)
+{
+	int	i;
+
+	i = 0;
+	while (i < map->rows)
+	{
+		if (map->map[i][0] != WALL || map->map[i][map->columns - 1] != WALL)
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
+bool	is_surrounded_by_walls(t_map *map)
+{
+	return (check_horizontal_walls(map) && check_vertical_walls(map));
+}
+
+bool	read_map(t_map *map, const char *filename)
+{
+	int		fd;
+	char	*line;
+	int		row;
+	char	**temp_map;
+
+	ft_printf("Debug: Opening map file\n");
+	fd = open(filename, O_RDONLY);
+	if (fd < 0)
+	{
+		ft_printf("Error\nFailed to open map file\n");
+		return (false);
+	}
+	row = 0;
+	temp_map = NULL;
+	ft_printf("Debug: Reading map lines\n");
+	while (1)
+	{
+		line = get_next_line(fd);
+		if (!line)
+			break ;
+		ft_printf("Debug: Read line %d: %s", row, line);
+		if (row == 0)
+			map->columns = ft_strlen(line) - 1;
+		else if ((int)ft_strlen(line) - 1 != map->columns)
 		{
-			if (game->map.map[i][j] != WALL && game->map.map[i][j] != PLAYER
-				&& game->map.map[i][j] != EXIT && game->map.map[i][j] != FLOOR
-				&& game->map.map[i][j] != COLLECTIBLE)
-			{
-				ft_printf("Error: Invalid map element at (%d, %d): %c\n", j, i,
-					game->map.map[i][j]);
-				return (0);
-			}
+			ft_printf("Error\nMap is not rectangular\n");
+			free(line);
+			close(fd);
+			return (false);
 		}
-	}
-	return (1);
-}
-
-static int	ft_check_map_walls(t_game *game)
-{
-	int	i;
-	int	j;
-
-	i = -1;
-	while (++i < game->map.rows)
-	{
-		j = -1;
-		while (++j < game->map.columns)
+		ft_printf("Debug: Allocating memory for row %d\n", row);
+		temp_map = realloc(temp_map, sizeof(char *) * (row + 1));
+		if (!temp_map)
 		{
-			if ((i == 0 || i == game->map.rows - 1 || j == 0
-					|| j == game->map.columns - 1)
-				&& game->map.map[i][j] != WALL)
-			{
-				ft_printf("Error: Invalid wall at (%d, %d)\n", j, i);
-				return (0);
-			}
+			ft_printf("Error\nMemory allocation failed\n");
+			free(line);
+			close(fd);
+			return (false);
 		}
+		ft_printf("Debug: Trimming line %d\n", row);
+		temp_map[row] = ft_strtrim(line, "\n");
+		if (!temp_map[row])
+		{
+			ft_printf("Error\nFailed to trim line\n");
+			free(line);
+			close(fd);
+			return (false);
+		}
+		free(line);
+		row++;
+		ft_printf("Debug: Finished processing line %d\n", row - 1);
 	}
-	return (1);
-}
-
-static int	ft_check_required_elements(t_game *game)
-{
-	int	i;
-	int	j;
-
-	ft_init_map_elements(game);
-	i = -1;
-	while (++i < game->map.rows)
-	{
-		j = -1;
-		while (++j < game->map.columns)
-			ft_count_map_elements(game, i, j);
-	}
-	if (game->map.player.x == -1 || game->map.exit.x == 0
-		|| game->map.collectibles == 0)
-	{
-		ft_printf("Error: Invalid number of elements (P: %d, E: %d, C: %d)\n",
-			game->map.player.x, game->map.exit.x, game->map.collectibles);
-		return (0);
-	}
-	return (1);
-}
-
-int	ft_validate_map(t_game *game)
-{
-	if (!ft_validate_map_dimensions(game))
-		return (0);
-	if (!ft_check_map_elements(game))
-		return (0);
-	if (!ft_check_map_walls(game))
-		return (0);
-	if (!ft_check_required_elements(game))
-		return (0);
-	return (1);
-}
-
-int	ft_is_map_playable(t_game *game)
-{
-	if (!ft_validate_map(game))
-		return (0);
-	return (ft_perform_flood_fill(game));
+	map->rows = row;
+	map->map = temp_map;
+	close(fd);
+	ft_printf("Debug: Map read successfully. Rows: %d, Columns: %d\n",
+		map->rows, map->columns);
+	return (true);
 }

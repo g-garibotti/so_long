@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 11:18:45 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/07 20:34:38 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/08 18:50:56 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@
 # define KEY_A 97
 # define KEY_S 115
 # define KEY_D 100
+# define ANIMATION_SPEED 50
 
 typedef struct s_position
 {
@@ -106,5 +107,26 @@ typedef struct s_game
 	int			current_collectible_frame;
 	int			player_direction;
 }				t_game;
+
+// Function prototypes
+
+// Core functions
+void			setup_hooks(t_game *game);
+int				game_loop(t_game *game);
+void			exit_game(t_game *game);
+
+// Map functions
+bool			parse_map(t_game *game, const char *filename);
+bool			validate_map_chars(t_map *map);
+bool			is_surrounded_by_walls(t_map *map);
+bool			read_map(t_map *map, const char *filename);
+bool			is_map_solvable(t_map *map);
+
+// Player functions
+void			move_player(t_game *game, int dx, int dy);
+
+// Graphics functions
+bool			load_textures(t_game *game);
+void			render_game(t_game *game);
 
 #endif

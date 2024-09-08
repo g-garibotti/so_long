@@ -6,7 +6,7 @@
 #    By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 11:16:01 by ggaribot          #+#    #+#              #
-#    Updated: 2024/09/07 20:33:07 by ggaribot         ###   ########.fr        #
+#    Updated: 2024/09/08 18:23:39 by ggaribot         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,8 +21,15 @@ GAME_DIR = $(SRC_DIR)/game
 MAP_DIR = $(SRC_DIR)/map
 GRAPHICS_DIR = $(SRC_DIR)/graphics
 
-SRCS = $(CORE_DIR)/main.c
-
+SRCS = $(CORE_DIR)/main.c \
+       $(CORE_DIR)/game_loop.c \
+       $(CORE_DIR)/game_exit.c \
+       $(MAP_DIR)/map_parser.c \
+       $(MAP_DIR)/map_validator.c \
+       $(MAP_DIR)/map_solver.c \
+       $(GAME_DIR)/player.c \
+       $(GRAPHICS_DIR)/render.c \
+       $(GRAPHICS_DIR)/textures.c
 
 OBJS_DIR = objs
 OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJS_DIR)/%.o)
