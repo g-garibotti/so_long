@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:58:53 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/09 17:41:46 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/09 17:57:36 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,25 +81,12 @@ int	is_map_enclosed(t_map *map)
 
 int	validate_map(t_map *map)
 {
-	if (!is_map_rectangular(map))
-	{
-		ft_printf("Error: Map is not rectangular\n");
+	if (!is_map_rectangular(map) || !check_valid_characters(map)
+		|| !is_map_enclosed(map) || !count_map_elements(map))
 		return (0);
-	}
-	if (!check_valid_characters(map))
+	if (!is_map_solvable(map))
 	{
-		ft_printf("Error: Map contains invalid characters\n");
-		return (0);
-	}
-	if (!is_map_enclosed(map))
-	{
-		ft_printf("Error: Map is not enclosed\n");
-		return (0);
-	}
-	if (!count_map_elements(map))
-	{
-		ft_printf("Players: %d, Collectibles: %d, Exits: %d\n", map->players,
-			map->collectibles, map->exits);
+		ft_printf("Error: Map is not solvable\n");
 		return (0);
 	}
 	return (1);
