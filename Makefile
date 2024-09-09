@@ -6,7 +6,7 @@
 #    By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 11:16:01 by ggaribot          #+#    #+#              #
-#    Updated: 2024/09/09 14:38:10 by ggaribot         ###   ########.fr        #
+#    Updated: 2024/09/09 17:29:44 by ggaribot         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ SRCS = $(CORE_DIR)/main.c \
 	   $(GAME_DIR)/input.c \
 	   $(GAME_DIR)/game_update.c \
 	   $(GAME_DIR)/enemy.c \
+	   $(GAME_DIR)/collision.c \
 	   $(GRAPHICS_DIR)/render.c \
 	   $(GRAPHICS_DIR)/textures.c \
        $(MAP_DIR)/map_parser.c \

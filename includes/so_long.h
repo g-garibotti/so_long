@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 11:18:45 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/09 14:39:06 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/09 17:29:31 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,5 +121,6 @@ t_player		*init_player(t_map *map);
 t_enemy			*init_enemies(t_map *map);
 int				validate_map(t_map *map);
 int				is_map_solvable(t_map *map);
+int				check_collision(t_game *game, int new_x, int new_y);
 
 #endif

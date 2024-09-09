@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:27:51 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/09 15:30:36 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/09 17:29:16 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,40 +21,6 @@ void	update_move_counter(t_game *game)
 void	update_collectible_animation(t_game *game)
 {
 	game->current_collectible_frame = (game->current_collectible_frame + 1) % 3;
-}
-
-static int	check_collision(t_game *game, int new_x, int new_y)
-{
-	char	tile;
-
-	tile = game->map->grid[new_y][new_x];
-	if (tile == WALL)
-		return (0);
-	if (tile == ENEMY)
-	{
-		game->game_over = true;
-		ft_printf("Game Over! You were caught by an enemy!\n");
-		return (0);
-	}
-	if (tile == COLLECTIBLE)
-	{
-		game->collected++;
-		game->map->grid[new_y][new_x] = FLOOR;
-	}
-	if (tile == EXIT)
-	{
-		if (game->collected == game->map->collectibles)
-		{
-			game->game_over = true;
-			ft_printf("Congratulations! You won the game!\n");
-		}
-		else
-		{
-			ft_printf("You need to collect all items before exiting!\n");
-			return (0);
-		}
-	}
-	return (1);
 }
 
 void	update_player_position(t_game *game, int dx, int dy)
