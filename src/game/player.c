@@ -5,57 +5,70 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/08 16:06:34 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/08 21:26:05 by ggaribot         ###   ########.fr       */
+/*   Created: 2024/09/09 14:30:03 by ggaribot          #+#    #+#             */
+/*   Updated: 2024/09/09 14:30:23 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/so_long.h"
 
-static void	handle_collectible(t_game *game, int new_x, int new_y)
+t_player	*init_player(t_map *map)
 {
-	game->map.collectibles--;
-	game->map.map[new_y][new_x] = FLOOR;
-}
+	t_player	*player;
+	int			x;
+	int			y;
 
-static bool	handle_exit(t_game *game, int collectibles)
-{
-	if (collectibles == 0)
+	player = (t_player *)malloc(sizeof(t_player));
+	if (!player)
+		return (NULL);
+	y = 0;
+	while (y < map->height)
 	{
-		game->victory = true;
-		return (true);
+		x = 0;
+		while (x < map->width)
+		{
+			if (map->grid[y][x] == PLAYER)
+			{
+				player->x = x;
+				player->y = y;
+				player->direction = PLAYER_FRONT;
+				player->moves = 0;
+				return (player);
+			}
+			x++;
+		}
+		y++;
 	}
-	ft_printf("Collect all items before exiting!\n");
-	return (false);
+	free(player);
+	return (NULL);
 }
 
-static void	update_player_position(t_game *game, int new_x, int new_y)
+t_enemy	*init_enemies(t_map *map)
 {
-	game->map.map[game->map.player.y][game->map.player.x] = FLOOR;
-	game->map.player.x = new_x;
-	game->map.player.y = new_y;
-	game->map.map[new_y][new_x] = PLAYER;
-	game->movements++;
-}
+	t_enemy	*enemies;
+	int		x;
+	int		y;
+	int		count;
 
-void	move_player(t_game *game, int dx, int dy)
-{
-	int		new_x;
-	int		new_y;
-	char	new_position;
-
-	new_x = game->map.player.x + dx;
-	new_y = game->map.player.y + dy;
-	if (new_x < 0 || new_x >= game->map.columns || new_y < 0
-		|| new_y >= game->map.rows)
-		return ;
-	new_position = game->map.map[new_y][new_x];
-	if (new_position == WALL)
-		return ;
-	if (new_position == COLLECTIBLE)
-		handle_collectible(game, new_x, new_y);
-	if (new_position == EXIT)
-		if (!handle_exit(game, game->map.collectibles))
-			return ;
-	update_player_position(game, new_x, new_y);
+	enemies = (t_enemy *)malloc(sizeof(t_enemy) * map->enemies);
+	if (!enemies)
+		return (NULL);
+	count = 0;
+	y = 0;
+	while (y < map->height)
+	{
+		x = 0;
+		while (x < map->width)
+		{
+			if (map->grid[y][x] == ENEMY)
+			{
+				enemies[count].x = x;
+				enemies[count].y = y;
+				count++;
+			}
+			x++;
+		}
+		y++;
+	}
+	return (enemies);
 }

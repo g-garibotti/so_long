@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 11:18:45 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/08 18:50:56 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/09 14:39:06 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@
 # define PLAYER_BACK 1
 # define PLAYER_LEFT 2
 # define PLAYER_RIGHT 3
-# define SPEED_MOVEMENT_ENEMY 70
 # define FRAMES_PER_ANIMATION 40
 # define WALL '1'
 # define PLAYER 'P'
 # define COLLECTIBLE 'C'
 # define EXIT 'E'
 # define FLOOR '0'
+# define ENEMY 'N'
 # define TILE_SIZE 32
 # define EVENT_EXIT 17
 # define KEY_ESC 65307
@@ -53,80 +53,73 @@
 # define KEY_D 100
 # define ANIMATION_SPEED 50
 
-typedef struct s_position
-{
-	int			x;
-	int			y;
-}				t_position;
-
 typedef struct s_map
 {
-	char		**map;
-	int			rows;
-	int			columns;
-	t_position	player;
-	t_position	exit;
+	char		**grid;
+	int			width;
+	int			height;
 	int			collectibles;
+	int			exits;
+	int			players;
+	int			enemies;
 }				t_map;
 
 typedef struct s_player
 {
-	t_position	position;
+	int			x;
+	int			y;
+	int			direction;
 	int			moves;
 }				t_player;
 
 typedef struct s_enemy
 {
-	t_position	position;
-	int			direction;
-	bool		is_vertical;
+	int			x;
+	int			y;
 }				t_enemy;
 
-typedef struct s_image
-{
-	void		*img;
-	t_position	position;
-}				t_image;
-
-typedef struct s_game
+typedef struct s_mlx
 {
 	void		*mlx;
 	void		*win;
-	int			window_width;
-	int			window_height;
-	int			movements;
-	bool		victory;
-	t_map		map;
-	t_enemy		enemy;
-	t_image		enemy_img;
-	t_image		floor;
-	t_image		wall;
-	t_image		collectible_frames[3];
-	t_image		exit;
-	t_image		player_images[4];
+}				t_mlx;
+
+typedef struct s_textures
+{
+	void		*wall;
+	void		*floor;
+	void		*player;
+	void		*exit;
+	void		*enemy;
+	void		*collectible[3];
+}				t_textures;
+
+typedef struct s_game
+{
+	t_map		*map;
+	t_player	*player;
+	t_enemy		*enemies;
+	t_mlx		*mlx;
+	t_textures	*textures;
+	int			collected;
+	bool		game_over;
 	int			current_collectible_frame;
-	int			player_direction;
 }				t_game;
 
-// Function prototypes
-
-// Core functions
-void			setup_hooks(t_game *game);
-int				game_loop(t_game *game);
-void			exit_game(t_game *game);
-
-// Map functions
-bool			parse_map(t_game *game, const char *filename);
-bool			validate_map_chars(t_map *map);
-bool			is_surrounded_by_walls(t_map *map);
-bool			read_map(t_map *map, const char *filename);
-bool			is_map_solvable(t_map *map);
-
-// Player functions
-void			move_player(t_game *game, int dx, int dy);
-
-// Graphics functions
-bool			load_textures(t_game *game);
+void			free_and_exit(t_game *game, char *message);
+int				load_textures(t_game *game);
 void			render_game(t_game *game);
+void			update_move_counter(t_game *game);
+void			update_collectible_animation(t_game *game);
+void			update_player_position(t_game *game, int dx, int dy);
+void			update_enemies(t_game *game);
+int				handle_key(int keycode, t_game *game);
+int				game_loop(t_game *game);
+t_map			*read_map(char *filename);
+int				game_loop(t_game *game);
+t_player		*init_player(t_map *map);
+t_enemy			*init_enemies(t_map *map);
+int				validate_map(t_map *map);
+int				is_map_solvable(t_map *map);
 
 #endif

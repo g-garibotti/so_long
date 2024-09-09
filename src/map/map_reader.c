@@ -5,106 +5,85 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/08 21:37:24 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/08 22:06:00 by ggaribot         ###   ########.fr       */
+/*   Created: 2024/09/09 14:17:19 by ggaribot          #+#    #+#             */
+/*   Updated: 2024/09/09 14:32:16 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/so_long.h"
 
-static size_t	get_effective_length(char *line)
-{
-	size_t	len;
-
-	len = ft_strlen(line);
-	if (len > 0 && line[len - 1] == '\n')
-		return (len - 1);
-	return (len);
-}
-
-static bool	process_line(t_map *map, char *line, int row)
-{
-	size_t	effective_length;
-
-	effective_length = get_effective_length(line);
-	if (row == 0)
-		map->columns = (int)effective_length;
-	else if (effective_length != (size_t)map->columns)
-	{
-		ft_printf("Error: Map is not rectangular\n");
-		return (false);
-	}
-	map->map[row] = ft_strtrim(line, "\n");
-	if (!map->map[row])
-	{
-		ft_printf("Error: Failed to trim line\n");
-		return (false);
-	}
-	return (true);
-}
-
-static bool	allocate_map(t_map *map, int fd)
-{
-	int		row_count;
-	char	*line;
-
-	row_count = 0;
-	line = get_next_line(fd);
-	while (line)
-	{
-		row_count++;
-		free(line);
-		line = get_next_line(fd);
-	}
-	close(fd);
-	map->map = (char **)malloc(sizeof(char *) * (row_count + 1));
-	if (!map->map)
-	{
-		ft_printf("Error: Failed to allocate memory for map\n");
-		return (false);
-	}
-	map->rows = row_count;
-	return (true);
-}
-
-static void	free_map(t_map *map, int row)
-{
-	int	i;
-
-	i = 0;
-	while (i < row)
-	{
-		free(map->map[i]);
-		i++;
-	}
-	free(map->map);
-}
-
-bool	read_map(t_map *map, const char *filename)
+static int	count_lines(char *filename)
 {
 	int		fd;
+	int		line_count;
 	char	*line;
-	int		row;
 
 	fd = open(filename, O_RDONLY);
-	if (fd < 0 || !allocate_map(map, fd))
-		return (false);
-	fd = open(filename, O_RDONLY);
-	row = 0;
+	if (fd == -1)
+		return (-1);
+	line_count = 0;
 	line = get_next_line(fd);
-	while (line)
+	while (line != NULL)
 	{
-		if (!process_line(map, line, row))
-		{
-			free(line);
-			free_map(map, row);
-			close(fd);
-			return (false);
-		}
+		line_count++;
 		free(line);
-		row++;
 		line = get_next_line(fd);
 	}
 	close(fd);
-	return (true);
+	return (line_count);
+}
+
+static char	**read_map_lines(char *filename, int line_count)
+{
+	char	**map;
+	char	*line;
+	int		fd;
+	int		i;
+
+	map = (char **)malloc(sizeof(char *) * (line_count + 1));
+	if (!map)
+		return (NULL);
+	fd = open(filename, O_RDONLY);
+	if (fd == -1)
+	{
+		free(map);
+		return (NULL);
+	}
+	i = 0;
+	line = get_next_line(fd);
+	while (line != NULL)
+	{
+		map[i] = line;
+		i++;
+		line = get_next_line(fd);
+	}
+	map[i] = NULL;
+	close(fd);
+	return (map);
+}
+
+t_map	*read_map(char *filename)
+{
+	t_map	*map;
+	int		line_count;
+
+	line_count = count_lines(filename);
+	if (line_count <= 0)
+		return (NULL);
+	map = (t_map *)malloc(sizeof(t_map));
+	if (!map)
+		return (NULL);
+	map->grid = read_map_lines(filename, line_count);
+	if (!map->grid)
+	{
+		free(map);
+		return (NULL);
+	}
+	map->height = line_count;
+	map->width = ft_strlen(map->grid[0]);
+	map->collectibles = 0;
+	map->exits = 0;
+	map->players = 0;
+	map->enemies = 0;
+	return (map);
 }

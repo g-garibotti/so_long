@@ -5,62 +5,44 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/08 16:12:11 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/08 21:27:01 by ggaribot         ###   ########.fr       */
+/*   Created: 2024/09/09 12:21:56 by ggaribot          #+#    #+#             */
+/*   Updated: 2024/09/09 13:36:03 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/so_long.h"
 
-static bool	load_image(t_game *game, t_image *img, char *path)
+static void	*load_xpm(void *mlx, char *path)
 {
-	img->img = mlx_xpm_file_to_image(game->mlx, path, &img->position.x,
-			&img->position.y);
-	return (img->img != NULL);
+	int	width;
+	int	height;
+
+	return (mlx_xpm_file_to_image(mlx, path, &width, &height));
 }
 
-static bool	load_player_images(t_game *game)
+int	load_textures(t_game *game)
 {
-	if (!load_image(game, &game->player_images[PLAYER_FRONT],
-			"assets/player_front.xpm"))
-		return (false);
-	if (!load_image(game, &game->player_images[PLAYER_BACK],
-			"assets/player_back.xpm"))
-		return (false);
-	if (!load_image(game, &game->player_images[PLAYER_LEFT],
-			"assets/player_left.xpm"))
-		return (false);
-	if (!load_image(game, &game->player_images[PLAYER_RIGHT],
-			"assets/player_right.xpm"))
-		return (false);
-	return (true);
-}
-
-static bool	load_collectible_images(t_game *game)
-{
-	if (!load_image(game, &game->collectible_frames[0],
-			"assets/collectible_1.xpm"))
-		return (false);
-	if (!load_image(game, &game->collectible_frames[1],
-			"assets/collectible_2.xpm"))
-		return (false);
-	if (!load_image(game, &game->collectible_frames[2],
-			"assets/collectible_3.xpm"))
-		return (false);
-	return (true);
-}
-
-bool	load_textures(t_game *game)
-{
-	if (!load_image(game, &game->wall, "assets/wall.xpm"))
-		return (false);
-	if (!load_image(game, &game->floor, "assets/floor.xpm"))
-		return (false);
-	if (!load_image(game, &game->exit, "assets/exit.xpm"))
-		return (false);
-	if (!load_player_images(game))
-		return (false);
-	if (!load_collectible_images(game))
-		return (false);
-	return (true);
+	game->textures = malloc(sizeof(t_textures));
+	if (!game->textures)
+		return (0);
+	game->textures->wall = load_xpm(game->mlx->mlx, "assets/wall.xpm");
+	game->textures->floor = load_xpm(game->mlx->mlx, "assets/floor.xpm");
+	game->textures->player = load_xpm(game->mlx->mlx, "assets/player.xpm");
+	game->textures->exit = load_xpm(game->mlx->mlx, "assets/exit.xpm");
+	game->textures->enemy = load_xpm(game->mlx->mlx, "assets/enemy.xpm");
+	game->textures->collectible[0] = load_xpm(game->mlx->mlx,
+			"assets/collectible_1.xpm");
+	game->textures->collectible[1] = load_xpm(game->mlx->mlx,
+			"assets/collectible_2.xpm");
+	game->textures->collectible[2] = load_xpm(game->mlx->mlx,
+			"assets/collectible_3.xpm");
+	if (!game->textures->wall || !game->textures->floor
+		|| !game->textures->player || !game->textures->exit
+		|| !game->textures->enemy || !game->textures->collectible[0]
+		|| !game->textures->collectible[1] || !game->textures->collectible[2])
+	{
+		free_and_exit(game, "Error: Failed to load textures\n");
+		return (0);
+	}
+	return (1);
 }

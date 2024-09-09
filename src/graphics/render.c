@@ -5,72 +5,68 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/08 16:07:18 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/08 22:06:50 by ggaribot         ###   ########.fr       */
+/*   Created: 2024/09/09 13:25:15 by ggaribot          #+#    #+#             */
+/*   Updated: 2024/09/09 13:34:54 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/so_long.h"
 
-static void	draw_tile(t_game *game, int x, int y)
+static void	draw_tile(t_game *game, void *img, int x, int y)
 {
-	char	tile;
-	void	*img;
-
-	tile = game->map.map[y][x];
-	if (tile == WALL)
-		img = game->wall.img;
-	else if (tile == PLAYER)
-		img = game->player_images[game->player_direction].img;
-	else if (tile == COLLECTIBLE)
-		img = game->collectible_frames[game->current_collectible_frame].img;
-	else if (tile == EXIT)
-		img = game->exit.img;
-	else
-		img = game->floor.img;
-	mlx_put_image_to_window(game->mlx, game->win, img, x * TILE_SIZE, y
-		* TILE_SIZE);
+	mlx_put_image_to_window(game->mlx->mlx, game->mlx->win, img, x * TILE_SIZE,
+		y * TILE_SIZE);
 }
 
-static void	display_movement_count(t_game *game)
+static void	draw_move_counter(t_game *game)
 {
-	char	*count_str;
+	char	*moves_str;
 	char	*display_str;
 
-	count_str = ft_itoa(game->movements);
-	if (!count_str)
-		return ;
-	display_str = ft_strjoin("Moves: ", count_str);
-	if (!display_str)
-	{
-		free(count_str);
-		return ;
-	}
-	mlx_string_put(game->mlx, game->win, 10, 20, 0x000000, display_str);
-	free(count_str);
+	moves_str = ft_itoa(game->player->moves);
+	display_str = ft_strjoin("Moves: ", moves_str);
+	mlx_string_put(game->mlx->mlx, game->mlx->win, 10, 20, 0x000000,
+		display_str);
+	free(moves_str);
 	free(display_str);
 }
 
-void	render_game(t_game *game)
+static void	draw_map_tile(t_game *game, int x, int y)
+{
+	draw_tile(game, game->textures->floor, x, y);
+	if (game->map->grid[y][x] == WALL)
+		draw_tile(game, game->textures->wall, x, y);
+	else if (game->map->grid[y][x] == PLAYER)
+		draw_tile(game, game->textures->player, x, y);
+	else if (game->map->grid[y][x] == COLLECTIBLE)
+		draw_tile(game,
+			game->textures->collectible[game->current_collectible_frame], x, y);
+	else if (game->map->grid[y][x] == EXIT)
+		draw_tile(game, game->textures->exit, x, y);
+	else if (game->map->grid[y][x] == ENEMY)
+		draw_tile(game, game->textures->enemy, x, y);
+}
+
+static void	draw_map(t_game *game)
 {
 	int	x;
 	int	y;
 
 	y = 0;
-	while (y < game->map.rows)
+	while (y < game->map->height)
 	{
 		x = 0;
-		while (x < game->map.columns)
+		while (x < game->map->width)
 		{
-			draw_tile(game, x, y);
+			draw_map_tile(game, x, y);
 			x++;
 		}
 		y++;
 	}
-	display_movement_count(game);
-	if (game->victory)
-	{
-		mlx_string_put(game->mlx, game->win, game->window_width / 2 - 50,
-			game->window_height / 2, 0xFFFFFF, "YOU WIN!");
-	}
+}
+
+void	render_game(t_game *game)
+{
+	draw_map(game);
+	draw_move_counter(game);
 }
