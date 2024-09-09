@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:17:19 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/09 14:57:14 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/09 16:57:24 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,7 @@ t_map	*read_map(char *filename)
 		free(map);
 		return (NULL);
 	}
-	map->height = line_count;
-	map->width = ft_strlen(map->grid[0]);
+	map->width = 0;
 	map->collectibles = 0;
 	map->exits = 0;
 	map->players = 0;

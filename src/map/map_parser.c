@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:58:53 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/09 14:46:27 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/09 17:04:35 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,16 @@ static int	is_map_rectangular(t_map *map)
 
 	y = 0;
 	len = ft_strlen(map->grid[0]);
-	while (y < map->height)
+	while (map->grid[y] != NULL)
 	{
 		if (ft_strlen(map->grid[y]) != len)
 			return (0);
 		y++;
 	}
 	map->width = len;
+	map->height = y;
+	if (map->width == map->height)
+		return (0);
 	return (1);
 }
 
