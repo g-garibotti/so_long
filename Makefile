@@ -6,7 +6,7 @@
 #    By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 11:16:01 by ggaribot          #+#    #+#              #
-#    Updated: 2024/09/09 17:29:44 by ggaribot         ###   ########.fr        #
+#    Updated: 2024/09/09 17:39:55 by ggaribot         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,6 +34,7 @@ SRCS = $(CORE_DIR)/main.c \
        $(MAP_DIR)/map_parser.c \
 	   $(MAP_DIR)/map_reader.c \
        $(MAP_DIR)/map_solver.c \
+	   $(MAP_DIR)/map_validator.c \
 
 OBJS_DIR = objs
 OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJS_DIR)/%.o)
