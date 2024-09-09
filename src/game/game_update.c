@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:27:51 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/09 15:05:44 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:30:36 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,26 @@ static int	check_collision(t_game *game, int new_x, int new_y)
 	if (tile == ENEMY)
 	{
 		game->game_over = true;
+		ft_printf("Game Over! You were caught by an enemy!\n");
 		return (0);
 	}
 	if (tile == COLLECTIBLE)
-		game->collected++;
-	if (tile == EXIT && game->collected == game->map->collectibles)
 	{
-		game->game_over = true;
-		ft_printf("Congratulations! You won the game!\n");
+		game->collected++;
+		game->map->grid[new_y][new_x] = FLOOR;
+	}
+	if (tile == EXIT)
+	{
+		if (game->collected == game->map->collectibles)
+		{
+			game->game_over = true;
+			ft_printf("Congratulations! You won the game!\n");
+		}
+		else
+		{
+			ft_printf("You need to collect all items before exiting!\n");
+			return (0);
+		}
 	}
 	return (1);
 }
