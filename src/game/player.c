@@ -6,13 +6,21 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:30:03 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/09 14:30:23 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/09 14:59:48 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/so_long.h"
 
-t_player	*init_player(t_map *map)
+static void	set_player_position(t_player *player, int x, int y)
+{
+	player->x = x;
+	player->y = y;
+	player->direction = PLAYER_FRONT;
+	player->moves = 0;
+}
+
+static t_player	*find_player_position(t_map *map)
 {
 	t_player	*player;
 	int			x;
@@ -21,26 +29,32 @@ t_player	*init_player(t_map *map)
 	player = (t_player *)malloc(sizeof(t_player));
 	if (!player)
 		return (NULL);
-	y = 0;
-	while (y < map->height)
+	y = -1;
+	while (++y < map->height)
 	{
-		x = 0;
-		while (x < map->width)
+		x = -1;
+		while (++x < map->width)
 		{
 			if (map->grid[y][x] == PLAYER)
 			{
-				player->x = x;
-				player->y = y;
-				player->direction = PLAYER_FRONT;
-				player->moves = 0;
+				set_player_position(player, x, y);
 				return (player);
 			}
-			x++;
 		}
-		y++;
 	}
 	free(player);
 	return (NULL);
+}
+
+t_player	*init_player(t_map *map)
+{
+	return (find_player_position(map));
+}
+
+static void	set_enemy_position(t_enemy *enemy, int x, int y)
+{
+	enemy->x = x;
+	enemy->y = y;
 }
 
 t_enemy	*init_enemies(t_map *map)
@@ -54,21 +68,15 @@ t_enemy	*init_enemies(t_map *map)
 	if (!enemies)
 		return (NULL);
 	count = 0;
-	y = 0;
-	while (y < map->height)
+	y = -1;
+	while (++y < map->height && count < map->enemies)
 	{
-		x = 0;
-		while (x < map->width)
+		x = -1;
+		while (++x < map->width && count < map->enemies)
 		{
 			if (map->grid[y][x] == ENEMY)
-			{
-				enemies[count].x = x;
-				enemies[count].y = y;
-				count++;
-			}
-			x++;
+				set_enemy_position(&enemies[count++], x, y);
 		}
-		y++;
 	}
 	return (enemies);
 }

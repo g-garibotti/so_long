@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:17:19 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/09 14:32:16 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/09 14:57:14 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,15 @@ static int	count_lines(char *filename)
 	return (line_count);
 }
 
+static void	trim_newline(char *str)
+{
+	int	len;
+
+	len = ft_strlen(str);
+	if (len > 0 && str[len - 1] == '\n')
+		str[len - 1] = '\0';
+}
+
 static char	**read_map_lines(char *filename, int line_count)
 {
 	char	**map;
@@ -53,13 +62,13 @@ static char	**read_map_lines(char *filename, int line_count)
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
+		trim_newline(line);
 		map[i] = line;
 		i++;
 		line = get_next_line(fd);
 	}
 	map[i] = NULL;
-	close(fd);
-	return (map);
+	return (close(fd), map);
 }
 
 t_map	*read_map(char *filename)

@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 12:21:56 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/09 13:36:03 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/09 14:56:35 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,14 @@
 
 static void	*load_xpm(void *mlx, char *path)
 {
-	int	width;
-	int	height;
+	void	*img;
+	int		width;
+	int		height;
 
-	return (mlx_xpm_file_to_image(mlx, path, &width, &height));
+	img = mlx_xpm_file_to_image(mlx, path, &width, &height);
+	if (!img)
+		ft_printf("Failed to load texture: %s\n", path);
+	return (img);
 }
 
 int	load_textures(t_game *game)
@@ -41,7 +45,7 @@ int	load_textures(t_game *game)
 		|| !game->textures->enemy || !game->textures->collectible[0]
 		|| !game->textures->collectible[1] || !game->textures->collectible[2])
 	{
-		free_and_exit(game, "Error: Failed to load textures\n");
+		ft_printf("Error: Failed to load one or more textures\n");
 		return (0);
 	}
 	return (1);

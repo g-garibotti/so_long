@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:16:02 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/09 14:26:16 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:06:59 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,23 @@ static int	setup_mlx(t_game *game)
 {
 	game->mlx = (t_mlx *)malloc(sizeof(t_mlx));
 	if (!game->mlx)
+	{
+		ft_printf("Failed to allocate memory for MLX structure\n");
 		return (0);
+	}
 	game->mlx->mlx = mlx_init();
 	if (!game->mlx->mlx)
+	{
+		ft_printf("Failed to initialize MLX\n");
 		return (0);
+	}
 	game->mlx->win = mlx_new_window(game->mlx->mlx, game->map->width
 			* TILE_SIZE, game->map->height * TILE_SIZE, "so_long");
 	if (!game->mlx->win)
+	{
+		ft_printf("Failed to create MLX window\n");
 		return (0);
+	}
 	return (1);
 }
 
@@ -90,5 +99,6 @@ int	main(int argc, char **argv)
 	mlx_hook(game->mlx->win, 17, 1L << 17, (int (*)())free_and_exit, game);
 	mlx_loop_hook(game->mlx->mlx, game_loop, game);
 	mlx_loop(game->mlx->mlx);
+	free_and_exit(game, NULL);
 	return (0);
 }
