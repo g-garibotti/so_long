@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 11:55:03 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/09 15:09:19 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/10 13:09:59 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,20 @@ static void	free_map(t_map *map)
 {
 	int	i;
 
-	if (map && map->grid)
+	if (map)
 	{
-		i = 0;
-		while (i < map->height)
-			free(map->grid[i++]);
-		free(map->grid);
+		if (map->grid)
+		{
+			i = 0;
+			while (i < map->height && map->grid[i])
+			{
+				free(map->grid[i]);
+				i++;
+			}
+			free(map->grid);
+		}
+		free(map);
 	}
-	free(map);
 }
 
 static void	free_textures(t_textures *textures, void *mlx)

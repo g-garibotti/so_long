@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:17:19 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/09 16:57:24 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/10 13:16:34 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,18 @@ static void	trim_newline(char *str)
 		str[len - 1] = '\0';
 }
 
+static int	process_line(char **map, int *i, char *line)
+{
+	trim_newline(line);
+	if (ft_strlen(line) == 0)
+	{
+		free(line);
+		return (0);
+	}
+	map[(*i)++] = line;
+	return (1);
+}
+
 static char	**read_map_lines(char *filename, int line_count)
 {
 	char	**map;
@@ -49,26 +61,26 @@ static char	**read_map_lines(char *filename, int line_count)
 	int		fd;
 	int		i;
 
-	map = (char **)malloc(sizeof(char *) * (line_count + 1));
+	map = (char **)ft_calloc(line_count + 1, sizeof(char *));
 	if (!map)
 		return (NULL);
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
-	{
-		free(map);
-		return (NULL);
-	}
+		return (free(map), NULL);
 	i = 0;
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
-		trim_newline(line);
-		map[i] = line;
-		i++;
+		if (!process_line(map, &i, line))
+		{
+			ft_free_2d_array(map);
+			close(fd);
+			return (NULL);
+		}
 		line = get_next_line(fd);
 	}
-	map[i] = NULL;
-	return (close(fd), map);
+	close(fd);
+	return (map);
 }
 
 t_map	*read_map(char *filename)
@@ -79,7 +91,7 @@ t_map	*read_map(char *filename)
 	line_count = count_lines(filename);
 	if (line_count <= 0)
 		return (NULL);
-	map = (t_map *)malloc(sizeof(t_map));
+	map = (t_map *)ft_calloc(1, sizeof(t_map));
 	if (!map)
 		return (NULL);
 	map->grid = read_map_lines(filename, line_count);
@@ -88,10 +100,5 @@ t_map	*read_map(char *filename)
 		free(map);
 		return (NULL);
 	}
-	map->width = 0;
-	map->collectibles = 0;
-	map->exits = 0;
-	map->players = 0;
-	map->enemies = 0;
 	return (map);
 }
