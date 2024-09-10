@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 11:55:03 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/10 13:09:59 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/10 15:17:49 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	free_map(t_map *map)
 		if (map->grid)
 		{
 			i = 0;
-			while (i < map->height && map->grid[i])
+			while (map->grid[i])
 			{
 				free(map->grid[i]);
 				i++;
