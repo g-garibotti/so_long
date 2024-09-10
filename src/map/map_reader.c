@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:17:19 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/09 16:57:24 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/10 11:08:52 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,6 @@ static int	count_lines(char *filename)
 	return (line_count);
 }
 
-static void	trim_newline(char *str)
-{
-	int	len;
-
-	len = ft_strlen(str);
-	if (len > 0 && str[len - 1] == '\n')
-		str[len - 1] = '\0';
-}
-
 static char	**read_map_lines(char *filename, int line_count)
 {
 	char	**map;
@@ -62,7 +53,6 @@ static char	**read_map_lines(char *filename, int line_count)
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
-		trim_newline(line);
 		map[i] = line;
 		i++;
 		line = get_next_line(fd);
@@ -75,11 +65,12 @@ t_map	*read_map(char *filename)
 {
 	t_map	*map;
 	int		line_count;
+	int		i;
 
 	line_count = count_lines(filename);
 	if (line_count <= 0)
 		return (NULL);
-	map = (t_map *)malloc(sizeof(t_map));
+	map = (t_map *)ft_calloc(1, sizeof(t_map));
 	if (!map)
 		return (NULL);
 	map->grid = read_map_lines(filename, line_count);
@@ -88,10 +79,10 @@ t_map	*read_map(char *filename)
 		free(map);
 		return (NULL);
 	}
-	map->width = 0;
-	map->collectibles = 0;
-	map->exits = 0;
-	map->players = 0;
-	map->enemies = 0;
+	i = 0;
+	while (map->grid[i] && map->grid[i][0] != '\0')
+		i++;
+	map->height = i;
+	map->width = (i > 0) ? ft_strlen(map->grid[0]) : 0;
 	return (map);
 }
