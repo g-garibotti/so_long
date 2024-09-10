@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:17:19 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/10 11:08:52 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/10 11:15:08 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ t_map	*read_map(char *filename)
 	while (map->grid[i] && map->grid[i][0] != '\0')
 		i++;
 	map->height = i;
-	map->width = (i > 0) ? ft_strlen(map->grid[0]) : 0;
+	map->width = 0;
+	if (i > 0)
+		map->width = ft_strlen(map->grid[0]);
 	return (map);
 }
