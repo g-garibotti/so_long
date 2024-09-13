@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 13:58:53 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/10 13:10:31 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/13 15:06:52 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static int	is_map_rectangular(t_map *map)
 	return (1);
 }
 
-int	is_map_enclosed(t_map *map)
+static int	is_map_enclosed(t_map *map)
 {
 	int	x;
 	int	y;

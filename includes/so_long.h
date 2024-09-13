@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 11:18:45 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/09 17:56:47 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/13 15:06:52 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,5 @@ int				validate_map(t_map *map);
 int				is_map_solvable(t_map *map);
 int				check_collision(t_game *game, int new_x, int new_y);
 int				check_valid_characters(t_map *map);
-int				is_map_enclosed(t_map *map);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:17:19 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/10 15:29:12 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/13 14:56:00 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,7 @@ static int	process_line(char **map, int *i, char *line)
 {
 	trim_newline(line);
 	if (ft_strlen(line) == 0)
-	{
-		free(line);
-		return (0);
-	}
+		return (free(line), 0);
 	map[(*i)++] = line;
 	return (1);
 }
@@ -96,9 +93,6 @@ t_map	*read_map(char *filename)
 		return (NULL);
 	map->grid = read_map_lines(filename, line_count);
 	if (!map->grid)
-	{
-		free(map);
-		return (NULL);
-	}
+		return (free(map), NULL);
 	return (map);
 }

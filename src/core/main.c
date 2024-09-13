@@ -6,7 +6,7 @@
 /*   By: ggaribot <ggaribot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 14:16:02 by ggaribot          #+#    #+#             */
-/*   Updated: 2024/09/10 15:23:56 by ggaribot         ###   ########.fr       */
+/*   Updated: 2024/09/13 15:33:13 by ggaribot         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,24 +57,14 @@ static int	setup_mlx(t_game *game)
 static int	setup_game(t_game *game, char *map_file)
 {
 	game->map = read_map(map_file);
-	if (!game->map || !validate_map(game->map) || !is_map_solvable(game->map))
-	{
+	if (!game->map || !validate_map(game->map))
 		free_and_exit(game, "Error: Invalid map\n");
-		return (0);
-	}
 	if (!setup_mlx(game) || !load_textures(game))
-	{
-		free_and_exit(game,
-			"Error: Failed to initialize MLX or load textures\n");
-		return (0);
-	}
+		free_and_exit(game, "Error: Failed to init MLX or load textures\n");
 	game->player = init_player(game->map);
 	game->enemies = init_enemies(game->map);
 	if (!game->player || !game->enemies)
-	{
 		free_and_exit(game, "Error: Failed to initialize player or enemies\n");
-		return (0);
-	}
 	return (1);
 }
 
@@ -83,16 +73,10 @@ int	main(int argc, char **argv)
 	t_game	*game;
 
 	if (argc != 2)
-	{
-		ft_printf("Error: Wrong number of arguments\n");
-		return (1);
-	}
+		return (ft_printf("Error: Wrong number of arguments\n"), 1);
 	game = init_game();
 	if (!game)
-	{
-		ft_printf("Error: Failed to initialize game\n");
-		return (1);
-	}
+		return (ft_printf("Error: Failed to initialize game\n"), 1);
 	if (!setup_game(game, argv[1]))
 		return (1);
 	mlx_hook(game->mlx->win, 2, 1L << 0, handle_key, game);
